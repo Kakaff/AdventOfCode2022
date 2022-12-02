@@ -14,3 +14,5 @@ var groupedCalories = Regex.Matches(inputText, @"((?:[0-9]+(?:\r\n|\r|\n|$))+)")
 var maxCalories = groupedCalories.Max(x => x.Sum(y => int.Parse(y)));
 
 Console.WriteLine($"The elf carrying the most calories is carrying {maxCalories}");
+Console.WriteLine("Press any key to exit...");
+Console.ReadKey();
