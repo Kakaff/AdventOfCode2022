@@ -4,19 +4,15 @@ using (var file = File.OpenRead("./input.txt"))
 using (var streamReader = new StreamReader(file))
     inputText = streamReader.ReadToEnd();
 
-int[,] moveLookup = new int[3, 3];
+int[,] moveResultScoreLookup = new int[3, 3];
 int[,] desiredOutcomeLookup = new int[3, 3];
 
 for (int i = 0; i < 3; i++)
 {
-    moveLookup[i, GetLosingMoveIndex(i)] = 0;
-    moveLookup[i, i] = 3;
-    moveLookup[i, GetWinningMoveIndex(i)] = 6;
-}
+    moveResultScoreLookup[i, GetLosingMoveIndex(i)] = 0;
+    moveResultScoreLookup[i, i] = 3;
+    moveResultScoreLookup[i, GetWinningMoveIndex(i)] = 6;
 
-
-for (int i = 0; i < 3; i++)
-{
     desiredOutcomeLookup[i, 0] = GetLosingMoveIndex(i);
     desiredOutcomeLookup[i, 1] = i;
     desiredOutcomeLookup[i, 2] = GetWinningMoveIndex(i);
@@ -36,24 +32,21 @@ IEnumerable<IEnumerable<char>> ParseRounds(string input)
 
 void FigureOutScoreForPart1(string input)
 {
-    var rounds = ParseRounds(input)
-        .Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
+    var rounds = ParseRounds(input).Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
 
     Console.WriteLine($"Part 1: your total score was {SolveForTotalScore(rounds)}");
 }
 
 void FigureOutScoreForPart2(string input)
 {
-    var rounds = ParseRounds(input)
-        .Select(x => (OpponentMove: x.First() - 'A', DesiredOutCome: x.Last() - 'X'))
-        .Select(x => (x.OpponentMove, OurMove: desiredOutcomeLookup[x.OpponentMove, x.DesiredOutCome]));
+    var rounds = ParseRounds(input).Select(x => (OpponentMove: x.First() - 'A', OurMove: desiredOutcomeLookup[x.First() - 'A', x.Last() - 'X']));
 
     Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(rounds)}");
 }
 
 int SolveForTotalScore(IEnumerable<(int OpponentMove, int OurMove)> rounds)
 {
-    return rounds.Sum(x => moveLookup[x.OpponentMove, x.OurMove] + x.OurMove + 1);
+    return rounds.Sum(x => moveResultScoreLookup[x.OpponentMove, x.OurMove] + x.OurMove + 1);
 }
 
 int GetWinningMoveIndex(int move) => move + 1 > 2 ? 0 : move + 1;
