@@ -9,40 +9,29 @@ int[,] desiredOutcomeLookup = new int[3, 3];
 
 for (int i = 0; i < 3; i++)
 {
-    moveResultScoreLookup[i, GetLosingMoveIndex(i)] = 0;
-    moveResultScoreLookup[i, i] = 3;
-    moveResultScoreLookup[i, GetWinningMoveIndex(i)] = 6;
+    var losingMoveIndex = GetLosingMoveIndex(i);
+    var winningMoveIndex = GetWinningMoveIndex(i);
 
-    desiredOutcomeLookup[i, 0] = GetLosingMoveIndex(i);
+    moveResultScoreLookup[i, losingMoveIndex] = 0;
+    moveResultScoreLookup[i, i] = 3;
+    moveResultScoreLookup[i, winningMoveIndex] = 6;
+
+    desiredOutcomeLookup[i, 0] = losingMoveIndex;
     desiredOutcomeLookup[i, 1] = i;
-    desiredOutcomeLookup[i, 2] = GetWinningMoveIndex(i);
+    desiredOutcomeLookup[i, 2] = winningMoveIndex;
 }
 
-FigureOutScoreForPart1(inputText);
-FigureOutScoreForPart2(inputText);
+var rounds = from round in inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+             select round.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.First());
+
+var part1Results = rounds.Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
+var part2Results = rounds.Select(x => (OpponentMove: x.First() - 'A', OurMove: desiredOutcomeLookup[x.First() - 'A', x.Last() - 'X']));
+
+Console.WriteLine($"Part 1: your total score was {SolveForTotalScore(part1Results)}");
+Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(part2Results)}");
 
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
-
-IEnumerable<IEnumerable<char>> ParseRounds(string input)
-{
-    return input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-    .Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(y => y.First()));
-}
-
-void FigureOutScoreForPart1(string input)
-{
-    var rounds = ParseRounds(input).Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
-
-    Console.WriteLine($"Part 1: your total score was {SolveForTotalScore(rounds)}");
-}
-
-void FigureOutScoreForPart2(string input)
-{
-    var rounds = ParseRounds(input).Select(x => (OpponentMove: x.First() - 'A', OurMove: desiredOutcomeLookup[x.First() - 'A', x.Last() - 'X']));
-
-    Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(rounds)}");
-}
 
 int SolveForTotalScore(IEnumerable<(int OpponentMove, int OurMove)> rounds)
 {
