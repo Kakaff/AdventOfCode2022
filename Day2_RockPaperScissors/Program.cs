@@ -39,7 +39,7 @@ void FigureOutScoreForPart1(string input)
     var rounds = ParseRounds(input)
         .Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
 
-    Console.WriteLine($"Part 1: your totalt score was {SolveForTotalScore(rounds)}");
+    Console.WriteLine($"Part 1: your total score was {SolveForTotalScore(rounds)}");
 }
 
 void FigureOutScoreForPart2(string input)
@@ -48,7 +48,7 @@ void FigureOutScoreForPart2(string input)
         .Select(x => (OpponentMove: x.First() - 'A', DesiredOutCome: x.Last() - 'X'))
         .Select(x => (x.OpponentMove, OurMove: desiredOutComeLookup[x.OpponentMove, x.DesiredOutCome]));
 
-    Console.WriteLine($"Part 2: your totalt score was {SolveForTotalScore(rounds)}");
+    Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(rounds)}");
 }
 
 int SolveForTotalScore(IEnumerable<(int OpponentMove, int OurMove)> rounds)
