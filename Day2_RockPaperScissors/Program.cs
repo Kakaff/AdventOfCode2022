@@ -5,7 +5,7 @@ using (var streamReader = new StreamReader(file))
     inputText = streamReader.ReadToEnd();
 
 int[,] moveLookup = new int[3, 3];
-int[,] desiredOutComeLookup = new int[3, 3];
+int[,] desiredOutcomeLookup = new int[3, 3];
 
 for (int i = 0; i < 3; i++)
 {
@@ -17,9 +17,9 @@ for (int i = 0; i < 3; i++)
 
 for (int i = 0; i < 3; i++)
 {
-    desiredOutComeLookup[i, 0] = GetLosingMoveIndex(i);
-    desiredOutComeLookup[i, 1] = i;
-    desiredOutComeLookup[i, 2] = GetWinningMoveIndex(i);
+    desiredOutcomeLookup[i, 0] = GetLosingMoveIndex(i);
+    desiredOutcomeLookup[i, 1] = i;
+    desiredOutcomeLookup[i, 2] = GetWinningMoveIndex(i);
 }
 
 FigureOutScoreForPart1(inputText);
@@ -46,7 +46,7 @@ void FigureOutScoreForPart2(string input)
 {
     var rounds = ParseRounds(input)
         .Select(x => (OpponentMove: x.First() - 'A', DesiredOutCome: x.Last() - 'X'))
-        .Select(x => (x.OpponentMove, OurMove: desiredOutComeLookup[x.OpponentMove, x.DesiredOutCome]));
+        .Select(x => (x.OpponentMove, OurMove: desiredOutcomeLookup[x.OpponentMove, x.DesiredOutCome]));
 
     Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(rounds)}");
 }
