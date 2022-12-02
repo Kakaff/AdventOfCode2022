@@ -6,9 +6,8 @@ using (var file = File.OpenRead("./input.txt"))
 using (var streamReader = new StreamReader(file))
     inputText = streamReader.ReadToEnd();
 
-var caloriesPerElf = Regex.Matches(inputText, @"((?:[0-9]+(?:\r\n|\r|\n|$))+)")
-    .Where(x => x.Success)
-    .Select(x => x.Value.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+var caloriesPerElf = inputText.Split($"{Environment.NewLine}{Environment.NewLine}")
+    .Select(x => x.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
     .Select(x => x.Sum(y => int.Parse(y)))
     .OrderDescending();
 
