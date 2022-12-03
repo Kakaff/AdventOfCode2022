@@ -13,13 +13,12 @@ var part1DuplicatedTypesPerRucksack = rucksacks.Select(x => (FirstCompartment: x
                      .Select(x => x.Distinct())
                      .Select(x => x.Select(p => GetItemPriority(p)));
 
-var part2GroupBadges = rucksacks.Select((x, i) => (RucksackContents: x, Index: i))
-    .GroupBy(x => x.Index / 3)
+var part2GroupBadges = rucksacks.Chunk(3)
     .Select(x =>
     {
-        return (from itemInRucksack1 in x.First().RucksackContents
-                join itemInRucksack2 in x.Skip(1).First().RucksackContents on itemInRucksack1 equals itemInRucksack2
-                join itemInRucksack3 in x.Skip(2).First().RucksackContents on itemInRucksack1 equals itemInRucksack3
+        return (from itemInRucksack1 in x.First()
+                join itemInRucksack2 in x.Skip(1).First() on itemInRucksack1 equals itemInRucksack2
+                join itemInRucksack3 in x.Skip(2).First() on itemInRucksack1 equals itemInRucksack3
                 select itemInRucksack1);
     }).Select(x => x.Distinct().Single());
 
