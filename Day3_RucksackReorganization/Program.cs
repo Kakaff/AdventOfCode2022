@@ -7,20 +7,12 @@ using (var streamReader = new StreamReader(file))
 var rucksacks = inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
 
 var part1DuplicatedTypesPerRucksack = rucksacks.Select(x => (FirstCompartment: x[..(x.Length / 2)], SecondCompartment: x[(x.Length / 2)..]))
-                     .Select(x => (from item1 in x.FirstCompartment
-                                   join item2 in x.SecondCompartment on item1 equals item2
-                                   select item1))
-                     .Select(x => x.Distinct())
+                     .Select(x => x.FirstCompartment.Intersect(x.SecondCompartment).Distinct())
                      .Select(x => x.Select(p => GetItemPriority(p)));
 
-var part2GroupBadges = rucksacks.Chunk(3)
-    .Select(x =>
-    {
-        return (from itemInRucksack1 in x.First()
-                join itemInRucksack2 in x.Skip(1).First() on itemInRucksack1 equals itemInRucksack2
-                join itemInRucksack3 in x.Skip(2).First() on itemInRucksack1 equals itemInRucksack3
-                select itemInRucksack1);
-    }).Select(x => x.Distinct().Single());
+var part2GroupBadges = rucksacks.Cast<IEnumerable<char>>().Chunk(3)
+    .Select(x => x.Aggregate(x.First(), (a,b) => a.Intersect(b)))
+    .Select(x => x.Distinct().Single());
 
 var sumPart1 = part1DuplicatedTypesPerRucksack.Sum(x => x.Sum());
 var sumPart2 = part2GroupBadges.Sum(x => GetItemPriority(x));
