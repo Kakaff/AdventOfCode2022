@@ -21,8 +21,8 @@ for (int i = 0; i < 3; i++)
     desiredOutcomeLookup[i, 2] = winningMoveIndex;
 }
 
-var rounds = from round in inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
-             select round.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.First());
+var rounds = inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+    .Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Single()));
 
 var part1Results = rounds.Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
 var part2Results = part1Results.Select(x => (x.OpponentMove, OurMove: desiredOutcomeLookup[x.OpponentMove, x.OurMove]));
