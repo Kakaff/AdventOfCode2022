@@ -25,7 +25,7 @@ var rounds = from round in inputText.Split(Environment.NewLine, StringSplitOptio
              select round.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.First());
 
 var part1Results = rounds.Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
-var part2Results = rounds.Select(x => (OpponentMove: x.First() - 'A', OurMove: desiredOutcomeLookup[x.First() - 'A', x.Last() - 'X']));
+var part2Results = part1Results.Select(x => (x.OpponentMove, OurMove: desiredOutcomeLookup[x.OpponentMove, x.OurMove]));
 
 Console.WriteLine($"Part 1: your total score was {SolveForTotalScore(part1Results)}");
 Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(part2Results)}");
