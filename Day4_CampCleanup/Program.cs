@@ -12,9 +12,9 @@ var pairs = inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyE
             var rangeValues = range.Split('-', StringSplitOptions.RemoveEmptyEntries)
                                    .Select(num => int.Parse(num));
 
-            return new Range(rangeValues.Min(), rangeValues.Max());
+            return (Start: rangeValues.Min(), End: rangeValues.Max());
         }))
-    .Select(x => new Pair(x.First(), x.Last()));
+    .Select(x => (First: x.First(), Second: x.Last()));
 
 var part1FullyOverlappingPairs = pairs.Count(x => (x.First.Start <= x.Second.Start && x.First.End >= x.Second.End)
                                                || (x.Second.Start <= x.First.Start && x.Second.End >= x.First.End));
@@ -26,6 +26,3 @@ Console.WriteLine($"Part1: The number of fully overlapping pairs is {part1FullyO
 Console.WriteLine($"Part2: The number of overlapping pairs is {part2OverlappingPairs}");
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
-
-record struct Range(int Start, int End);
-record struct Pair(Range First, Range Second);
