@@ -18,7 +18,7 @@ namespace AoCHelpers
             return stack;
         }
 
-        public static IEnumerable<T?> PopRange<T>(this Stack<T?> stack, int count)
+        public static IEnumerable<T?> Pop<T>(this Stack<T?> stack, int count)
         {
             for (int i = 0; i < count; i++)
             {
