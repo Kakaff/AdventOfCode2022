@@ -1,11 +1,7 @@
 ﻿
-string inputText;
+using AoCHelpers;
 
-using (var file = File.OpenRead("./input.txt"))
-using (var streamReader = new StreamReader(file))
-    inputText = streamReader.ReadToEnd();
-
-var pairs = inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+var pairs = InputHelper.ReadInputLinesFromFile("./input.txt")
     .Select(pair => pair.Split(',', StringSplitOptions.RemoveEmptyEntries)
         .Select(range =>
         {

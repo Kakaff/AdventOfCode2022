@@ -1,13 +1,8 @@
 ﻿using AoCHelpers;
 using System.Text.RegularExpressions;
 
-string inputText;
-
-using (var file = File.OpenRead("./input.txt"))
-using (var streamReader = new StreamReader(file))
-    inputText = streamReader.ReadToEnd();
-
-var input = inputText.Split($"{Environment.NewLine}{Environment.NewLine}", StringSplitOptions.RemoveEmptyEntries);
+var input = InputHelper.ReadInputFromFile("./input.txt")
+    .Split($"{Environment.NewLine}{Environment.NewLine}", StringSplitOptions.RemoveEmptyEntries);
 
 var stackInputRows = input.First()
     .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
@@ -28,12 +23,13 @@ stackInputRows.Reverse()
 
 var commands = Regex.Matches(input.Last(), @"move ([0-9]+) from ([0-9]+) to ([0-9]+)", RegexOptions.IgnoreCase)
     .Select(x => x.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)))
-    .Select(x => (Quantity: x.First(), From: x.Skip(1).First(), To: x.Skip(2).First())).ToList();
+    .Select(x => (Quantity: x.First(), From: x.Skip(1).First(), To: x.Skip(2).First()))
+    .ToList();
 
 commands.ForEach(x =>
 {
-    part1Stacks[x.To - 1].PushRange(part1Stacks[x.From - 1].PopRange(x.Quantity));
-    part2Stacks[x.To - 1].PushRange(part2Stacks[x.From - 1].PopRange(x.Quantity).Reverse());
+    part1Stacks[x.To - 1].PushRange(part1Stacks[x.From - 1].Pop(x.Quantity));
+    part2Stacks[x.To - 1].PushRange(part2Stacks[x.From - 1].Pop(x.Quantity).Reverse());
 });
 
 Console.WriteLine($"Part 1: The characters at the top of each stack are {string.Concat(part1Stacks.Select(x => x.Peek()))}");

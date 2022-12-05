@@ -1,10 +1,7 @@
-﻿string inputText;
+﻿using AoCHelpers;
 
-using (var file = File.OpenRead("./input.txt"))
-using (var streamReader = new StreamReader(file))
-    inputText = streamReader.ReadToEnd();
-
-var caloriesPerElf = inputText.Split($"{Environment.NewLine}{Environment.NewLine}")
+var caloriesPerElf = InputHelper.ReadInputFromFile("./input.txt")
+    .Split($"{Environment.NewLine}{Environment.NewLine}")
     .Select(x => x.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
     .Select(x => x.Sum(y => int.Parse(y)))
     .OrderDescending();

@@ -1,17 +1,14 @@
-﻿string inputText;
+﻿using AoCHelpers;
 
-using (var file = File.OpenRead("./input.txt"))
-using (var streamReader = new StreamReader(file))
-    inputText = streamReader.ReadToEnd();
-
-var rucksacks = inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+var rucksacks = InputHelper.ReadInputLinesFromFile("./input.txt");
 
 var part1DuplicatedTypesSum = rucksacks.Select(x => (FirstCompartment: x[..(x.Length / 2)], SecondCompartment: x[(x.Length / 2)..]))
                      .Select(x => x.FirstCompartment.Intersect(x.SecondCompartment).Distinct())
                      .Select(x => x.Select(p => GetItemPriority(p)))
                      .Sum(x => x.Sum());
 
-var part2GroupBadgesSum = rucksacks.Cast<IEnumerable<char>>().Chunk(3)
+var part2GroupBadgesSum = rucksacks.Cast<IEnumerable<char>>()
+    .Chunk(3)
     .Select(x => x.Aggregate(x.First(), (a, b) => a.Intersect(b)))
     .Select(x => GetItemPriority(x.Distinct().Single()))
     .Sum();

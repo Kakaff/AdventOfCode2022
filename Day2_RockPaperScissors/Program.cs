@@ -1,8 +1,4 @@
-﻿string inputText;
-
-using (var file = File.OpenRead("./input.txt"))
-using (var streamReader = new StreamReader(file))
-    inputText = streamReader.ReadToEnd();
+﻿using AoCHelpers;
 
 int[,] moveResultScoreLookup = new int[3, 3];
 int[,] desiredOutcomeLookup = new int[3, 3];
@@ -21,7 +17,7 @@ for (int i = 0; i < 3; i++)
     desiredOutcomeLookup[i, 2] = winningMoveIndex;
 }
 
-var rounds = inputText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+var rounds = InputHelper.ReadInputLinesFromFile("./input.txt")
     .Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Single()));
 
 var part1Results = rounds.Select(x => (OpponentMove: x.First() - 'A', OurMove: x.Last() - 'X'));
@@ -29,7 +25,6 @@ var part2Results = part1Results.Select(x => (x.OpponentMove, OurMove: desiredOut
 
 Console.WriteLine($"Part 1: your total score was {SolveForTotalScore(part1Results)}");
 Console.WriteLine($"Part 2: your total score was {SolveForTotalScore(part2Results)}");
-
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
 
