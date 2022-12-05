@@ -22,37 +22,28 @@ for (int i = 0; i < part1Stacks.Length; i++)
     part2Stacks[i] = new Stack<char>();
 }
 
-foreach (var crate in stackInputRows.Reverse().SelectMany(row => row.Where(column => column.Value != ' ')))
+foreach (var (Value, StackIndex) in stackInputRows.Reverse().SelectMany(row => row.Where(column => column.Value != ' ')))
 {
-    part1Stacks[crate.StackIndex].Push(crate.Value);
-    part2Stacks[crate.StackIndex].Push(crate.Value);
+    part1Stacks[StackIndex].Push(Value);
+    part2Stacks[StackIndex].Push(Value);
 }
 
-var commandRows = input.Last();
-
-var commands = Regex.Matches(commandRows, @"move ([0-9]+) from ([0-9]+) to ([0-9]+)", RegexOptions.IgnoreCase)
+var commands = Regex.Matches(input.Last(), @"move ([0-9]+) from ([0-9]+) to ([0-9]+)", RegexOptions.IgnoreCase)
     .Select(x => x.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)))
     .Select(x => (Quantity: x.First(), From: x.Skip(1).First(), To: x.Skip(2).First()));
 
 foreach (var command in commands)
 {
-    var fromPart1 = part1Stacks[command.From - 1];
-    var toPart1 = part1Stacks[command.To - 1];
-
-    var fromPart2 = part2Stacks[command.From - 1];
-    var toPart2 = part2Stacks[command.To - 1];
-
     var part2CratesToMove = new List<char>();
 
     for (int i = 0; i < command.Quantity; i++)
     {
-        toPart1.Push(fromPart1.Pop());
-        part2CratesToMove.Add(fromPart2.Pop());
+        part1Stacks[command.To - 1].Push(part1Stacks[command.From - 1].Pop());
+        part2CratesToMove.Add(part2Stacks[command.From - 1].Pop());
     }
 
     part2CratesToMove.Reverse();
-    part2CratesToMove.ForEach(toPart2.Push);
-
+    part2CratesToMove.ForEach(part2Stacks[command.To - 1].Push);
 }
 
 var part1TopMessage = string.Concat(part1Stacks.Select(x => x.Peek()));
