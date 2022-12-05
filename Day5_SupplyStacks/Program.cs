@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using AoCHelpers;
+using System.Text.RegularExpressions;
 
 string inputText;
 
@@ -13,43 +14,26 @@ var stackInputRows = input.First()
     .Select(x => x.Chunk(4).Select((x, index) => (Value: x.Skip(1).First(), StackIndex: index)))
     .SkipLast(1);
 
-var part1Stacks = new Stack<char>[stackInputRows.First().Count()];
-var part2Stacks = new Stack<char>[part1Stacks.Length];
+var part1Stacks = new Stack<char>[stackInputRows.First().Count()].Fill(() => new Stack<char>());
+var part2Stacks = new Stack<char>[part1Stacks.Length].Fill(() => new Stack<char>());
 
-for (int i = 0; i < part1Stacks.Length; i++)
+stackInputRows.Reverse().SelectMany(row => row.Where(column => column.Value != ' ')).ToList().ForEach(crate =>
 {
-    part1Stacks[i] = new Stack<char>();
-    part2Stacks[i] = new Stack<char>();
-}
-
-foreach (var (Value, StackIndex) in stackInputRows.Reverse().SelectMany(row => row.Where(column => column.Value != ' ')))
-{
-    part1Stacks[StackIndex].Push(Value);
-    part2Stacks[StackIndex].Push(Value);
-}
+    part1Stacks[crate.StackIndex].Push(crate.Value);
+    part2Stacks[crate.StackIndex].Push(crate.Value);
+});
 
 var commands = Regex.Matches(input.Last(), @"move ([0-9]+) from ([0-9]+) to ([0-9]+)", RegexOptions.IgnoreCase)
     .Select(x => x.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)))
-    .Select(x => (Quantity: x.First(), From: x.Skip(1).First(), To: x.Skip(2).First()));
+    .Select(x => (Quantity: x.First(), From: x.Skip(1).First(), To: x.Skip(2).First())).ToList();
 
-foreach (var command in commands)
+commands.ForEach(x =>
 {
-    var part2CratesToMove = new List<char>();
+    part1Stacks[x.To - 1].PushRange(part1Stacks[x.From - 1].PopRange(x.Quantity));
+    part2Stacks[x.To - 1].PushRange(part2Stacks[x.From - 1].PopRange(x.Quantity).Reverse());
+});
 
-    for (int i = 0; i < command.Quantity; i++)
-    {
-        part1Stacks[command.To - 1].Push(part1Stacks[command.From - 1].Pop());
-        part2CratesToMove.Add(part2Stacks[command.From - 1].Pop());
-    }
-
-    part2CratesToMove.Reverse();
-    part2CratesToMove.ForEach(part2Stacks[command.To - 1].Push);
-}
-
-var part1TopMessage = string.Concat(part1Stacks.Select(x => x.Peek()));
-var part2TopMessage = string.Concat(part2Stacks.Select(x => x.Peek()));
-
-Console.WriteLine($"Part 1: The characters at the top of each stack are {part1TopMessage}");
-Console.WriteLine($"Part 2: The characters at the top of each stack are {part2TopMessage}");
+Console.WriteLine($"Part 1: The characters at the top of each stack are {string.Concat(part1Stacks.Select(x => x.Peek()))}");
+Console.WriteLine($"Part 2: The characters at the top of each stack are {string.Concat(part2Stacks.Select(x => x.Peek()))}");
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
