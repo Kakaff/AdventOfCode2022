@@ -17,11 +17,14 @@ var stackInputRows = input.First()
 var part1Stacks = new Stack<char>[stackInputRows.First().Count()].Fill(() => new Stack<char>());
 var part2Stacks = new Stack<char>[part1Stacks.Length].Fill(() => new Stack<char>());
 
-stackInputRows.Reverse().SelectMany(row => row.Where(column => column.Value != ' ')).ToList().ForEach(crate =>
-{
-    part1Stacks[crate.StackIndex].Push(crate.Value);
-    part2Stacks[crate.StackIndex].Push(crate.Value);
-});
+stackInputRows.Reverse()
+    .SelectMany(row => row.Where(column => column.Value != ' '))
+    .ToList()
+    .ForEach(crate =>
+    {
+        part1Stacks[crate.StackIndex].Push(crate.Value);
+        part2Stacks[crate.StackIndex].Push(crate.Value);
+    });
 
 var commands = Regex.Matches(input.Last(), @"move ([0-9]+) from ([0-9]+) to ([0-9]+)", RegexOptions.IgnoreCase)
     .Select(x => x.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)))
