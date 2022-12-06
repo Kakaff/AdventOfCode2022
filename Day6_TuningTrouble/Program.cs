@@ -1,49 +1,58 @@
 ﻿using AoCHelpers;
+using System.Diagnostics;
 
 var input = InputHelper.ReadInputFromFile("./input.txt");
 
-var part1 = GetFirstDistinctSequence(input, 4);
-var part2 = GetFirstDistinctSequence(input, 14);
+var part1 = GetFirstDistinctSequenceFastForwarded(input, 4);
+var part2 = GetFirstDistinctSequenceFastForwarded(input, 14);
 
-Console.WriteLine($"The first start of packet marker is found after {part1.ProcessedCount} characters have been processed");
-Console.WriteLine($"The first start of message marker is found after {part2.ProcessedCount} characters have been processed");
+Console.WriteLine($"The first start of packet marker {part1.Sequence} was found after {part1.ProcessedCount} characters had been processed");
+Console.WriteLine($"The first start of message marker {part2.Sequence} was found after {part2.ProcessedCount} characters had been processed");
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
 
-(string? Sequence, int ProcessedCount) GetFirstDistinctSequence(string input, int sequenceLength)
+(string? Sequence, int ProcessedCount) GetFirstDistinctSequenceFastForwarded(string input, int sequenceLength)
 {
-    var chunk = new char[sequenceLength];
+    if (input.Length < sequenceLength)
+        throw new ArgumentOutOfRangeException($"{nameof(sequenceLength)} is greater than {nameof(input.Length)}");
 
-    for (int i = 0; i < input.Length; i++)
+    var chunk = new char[sequenceLength].Fill(i => input[i]);
+    var curentIndex = sequenceLength - 1;
+
+    do
     {
-        if (i > sequenceLength - 1)
-        {
-            Array.Copy(chunk, 1, chunk, 0, sequenceLength - 1);
-        }
-        else
-        {
-            chunk[i] = input[i];
-            continue;
-        }
-
-        chunk[sequenceLength - 1] = input[i];
-        bool isDistinctSequence = false;
+        bool isDistinctSequence = true;
+        int shiftIndex = 0;
 
         for (int j = sequenceLength - 1; j > 0; j--)
         {
-            for (int k = 0; k < j; k++)
+            for (int k = j - 1; k >= 0; k--)
             {
-                isDistinctSequence = chunk[j] != chunk[k];
-
-                if (!isDistinctSequence)
+                if (chunk[j] == chunk[k])
+                {
+                    shiftIndex = k + 1;
+                    isDistinctSequence = false;
                     goto LoopEnd;
+                }
             }
         }
-        LoopEnd:
+    LoopEnd:
 
         if (isDistinctSequence)
-            return (string.Concat(chunk), i + 1);
-    }
+            return (string.Concat(chunk), curentIndex + 1);
 
-    return (null, input.Length);
+        int remainderCount = sequenceLength - shiftIndex;
+        Array.Copy(chunk, shiftIndex, chunk, 0, remainderCount);
+
+        for (int i = 0; i < shiftIndex; i++)
+        {
+            chunk[remainderCount + i] = input[curentIndex + i + 1];
+        }
+
+        curentIndex += shiftIndex;
+
+
+    } while (curentIndex + 1 < input.Length);
+
+    return (string.Concat(chunk), curentIndex);
 }
