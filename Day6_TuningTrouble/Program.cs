@@ -27,23 +27,23 @@ Console.ReadKey();
         }
 
         chunk[sequenceLength - 1] = input[i];
-        bool isNotUnique = false;
+        bool isDistinctSequence = false;
 
         for (int j = sequenceLength - 1; j > 0; j--)
         {
             for (int k = 0; k < j; k++)
             {
-                isNotUnique = chunk[j] == chunk[k];
+                isDistinctSequence = chunk[j] != chunk[k];
 
-                if (isNotUnique)
+                if (!isDistinctSequence)
                     break;
             }
 
-            if (isNotUnique)
+            if (!isDistinctSequence)
                 break;
         }
 
-        if (!isNotUnique)
+        if (isDistinctSequence)
             return (string.Concat(chunk), i + 1);
     }
 
