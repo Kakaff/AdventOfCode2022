@@ -36,12 +36,10 @@ Console.ReadKey();
                 isDistinctSequence = chunk[j] != chunk[k];
 
                 if (!isDistinctSequence)
-                    break;
+                    goto LoopEnd;
             }
-
-            if (!isDistinctSequence)
-                break;
         }
+        LoopEnd:
 
         if (isDistinctSequence)
             return (string.Concat(chunk), i + 1);
