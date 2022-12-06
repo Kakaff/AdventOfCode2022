@@ -1,5 +1,6 @@
 ﻿
 using AoCHelpers;
+using AoCHelpers.IEnumerableExtensions;
 
 var pairs = InputHelper.ReadInputLinesFromFile("./input.txt")
     .Select(pair => pair.Split(',', StringSplitOptions.RemoveEmptyEntries)

@@ -1,4 +1,7 @@
 ﻿using AoCHelpers;
+using AoCHelpers.ArrayExtensions;
+using AoCHelpers.IEnumerableExtensions;
+using AoCHelpers.StackExtensions;
 using System.Text.RegularExpressions;
 
 var input = InputHelper.ReadInputFromFile("./input.txt")
