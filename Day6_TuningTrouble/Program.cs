@@ -1,7 +1,6 @@
 ﻿using AoCHelpers;
 using AoCHelpers.ArrayExtensions;
 using AoCHelpers.IEnumerableExtensions;
-using System.Diagnostics;
 
 var input = InputHelper.ReadInputFromFile("./input.txt");
 
