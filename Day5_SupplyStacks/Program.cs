@@ -14,7 +14,6 @@ var part2Stacks = new Stack<char>[part1Stacks.Length].Fill(() => new Stack<char>
 
 stackInputRows.Reverse()
     .SelectMany(row => row.Where(column => column.Value != ' '))
-    .ToList()
     .ForEach(crate =>
     {
         part1Stacks[crate.StackIndex].Push(crate.Value);
@@ -24,7 +23,6 @@ stackInputRows.Reverse()
 Regex.Matches(input.Last(), @"move ([0-9]+) from ([0-9]+) to ([0-9]+)", RegexOptions.IgnoreCase)
     .Select(x => x.Groups.Values.Skip(1).Select(x => int.Parse(x.Value)))
     .Select(x => (Quantity: x.First(), From: x.Skip(1).First(), To: x.Skip(2).First()))
-    .ToList()
     .ForEach(x =>
     {
         part1Stacks[x.To - 1].PushRange(part1Stacks[x.From - 1].Pop(x.Quantity));
