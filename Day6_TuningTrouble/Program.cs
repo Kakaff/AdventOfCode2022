@@ -22,7 +22,7 @@ Console.ReadKey();
     do
     {
         bool isDistinctSequence = true;
-        int shiftIndex = 0;
+        int shiftIndex = 1;
 
         for (int j = sequenceLength - 1; j > 0; j--)
         {
@@ -41,6 +41,9 @@ Console.ReadKey();
         if (isDistinctSequence)
             return (string.Concat(chunk), curentIndex + 1);
 
+        if (curentIndex + shiftIndex > input.Length)
+            break;
+
         int remainderCount = sequenceLength - shiftIndex;
         Array.Copy(chunk, shiftIndex, chunk, 0, remainderCount);
 
@@ -54,5 +57,5 @@ Console.ReadKey();
 
     } while (curentIndex + 1 < input.Length);
 
-    return (string.Concat(chunk), curentIndex);
+    return (null, curentIndex);
 }
