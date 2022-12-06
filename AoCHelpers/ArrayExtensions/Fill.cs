@@ -1,6 +1,6 @@
-﻿namespace AoCHelpers
+﻿namespace AoCHelpers.ArrayExtensions
 {
-    public static class ArrayExtensions
+    public static partial class ArrayExtensions
     {
         public static T[] Fill<T>(this T[] array, Func<T> func)
         {
@@ -12,7 +12,7 @@
             return array;
         }
 
-        public static T[] Fill<T>(this T[] array, Func<int,T> func)
+        public static T[] Fill<T>(this T[] array, Func<int, T> func)
         {
             for (int i = 0; i < array.Length; i++)
             {
@@ -38,7 +38,7 @@
             return array;
         }
 
-        public static T[,] Fill<T>(this T[,] array, Func<int,int,T> func)
+        public static T[,] Fill<T>(this T[,] array, Func<int, int, T> func)
         {
             var rows = array.GetLength(0);
             var columns = array.GetLength(1);
@@ -47,7 +47,7 @@
             {
                 for (int j = 0; j < columns; j++)
                 {
-                    array[i,j] = func(i, j);
+                    array[i, j] = func(i, j);
                 }
             }
 
