@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day3_RucksackReorganization
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day4_CampCleanup", "Day4_CampCleanup\Day4_CampCleanup.csproj", "{E05171E0-0CD7-464E-A5E6-ABD4A054AF2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day5_SupplyStacks", "Day5_SupplyStacks\Day5_SupplyStacks.csproj", "{A1F1657F-BD32-404B-B96E-6C98A4392AC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day5_SupplyStacks", "Day5_SupplyStacks\Day5_SupplyStacks.csproj", "{A1F1657F-BD32-404B-B96E-6C98A4392AC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoCHelpers", "AoCHelpers\AoCHelpers.csproj", "{FCACA3A7-F1ED-4D93-BABF-E2AACC8FD689}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoCHelpers", "AoCHelpers\AoCHelpers.csproj", "{FCACA3A7-F1ED-4D93-BABF-E2AACC8FD689}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day6_TuningTrouble", "Day6_TuningTrouble\Day6_TuningTrouble.csproj", "{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{FCACA3A7-F1ED-4D93-BABF-E2AACC8FD689}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCACA3A7-F1ED-4D93-BABF-E2AACC8FD689}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCACA3A7-F1ED-4D93-BABF-E2AACC8FD689}.Release|Any CPU.Build.0 = Release|Any CPU
+		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
