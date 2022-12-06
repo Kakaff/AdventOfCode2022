@@ -3,15 +3,15 @@ using System.Diagnostics;
 
 var input = InputHelper.ReadInputFromFile("./input.txt");
 
-var part1 = GetFirstDistinctSequenceFastForwarded(input, 4);
-var part2 = GetFirstDistinctSequenceFastForwarded(input, 14);
+var part1 = GetFirstDistinctSequence(input, 4);
+var part2 = GetFirstDistinctSequence(input, 14);
 
 Console.WriteLine($"The first start of packet marker {part1.Sequence} was found after {part1.ProcessedCount} characters had been processed");
 Console.WriteLine($"The first start of message marker {part2.Sequence} was found after {part2.ProcessedCount} characters had been processed");
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
 
-(string? Sequence, int ProcessedCount) GetFirstDistinctSequenceFastForwarded(string input, int sequenceLength)
+(string? Sequence, int ProcessedCount) GetFirstDistinctSequence(string input, int sequenceLength)
 {
     if (input.Length < sequenceLength)
         throw new ArgumentOutOfRangeException($"{nameof(sequenceLength)} is greater than {nameof(input.Length)}");
@@ -53,7 +53,6 @@ Console.ReadKey();
         }
 
         curentIndex += shiftIndex;
-
 
     } while (curentIndex + 1 < input.Length);
 
