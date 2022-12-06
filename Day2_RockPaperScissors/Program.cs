@@ -8,7 +8,6 @@ for (int i = 0; i < 3; i++)
     var losingMoveIndex = GetLosingMoveIndex(i);
     var winningMoveIndex = GetWinningMoveIndex(i);
 
-    moveResultScoreLookup[i, losingMoveIndex] = 0;
     moveResultScoreLookup[i, i] = 3;
     moveResultScoreLookup[i, winningMoveIndex] = 6;
 
