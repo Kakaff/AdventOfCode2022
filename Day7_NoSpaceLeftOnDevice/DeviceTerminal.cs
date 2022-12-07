@@ -25,7 +25,7 @@ namespace Day7_NoSpaceLeftOnDevice
 
         void ParseDirectoryContents(string[] directoryContents)
         {
-            directoryContents.GroupBy(x => long.TryParse(x.Split(' ').First(), out _)).ForEach(group =>
+            directoryContents.GroupBy(x => char.IsDigit(x[0])).ForEach(group =>
             {
                 if (group.Key)
                     AddFilesToWorkingDirectory(group.AsEnumerable());
@@ -39,7 +39,7 @@ namespace Day7_NoSpaceLeftOnDevice
         void AddFilesToWorkingDirectory(IEnumerable<string> files)
         {
             files.Select(x => x.Split(' ').ToTuple<string, string>())
-                .ForEach(file => 
+                .ForEach(file =>
                 WorkingDirectory.Files
                 .Add(new DeviceDirectoryFile(WorkingDirectory, long.Parse(file.Item1), file.Item2)));
         }
@@ -47,7 +47,7 @@ namespace Day7_NoSpaceLeftOnDevice
         void AddDirectoriesToWorkingDirectory(IEnumerable<string> directories)
         {
             directories.Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries).Last())
-                .ForEach(directoryName => 
+                .ForEach(directoryName =>
                 WorkingDirectory.SubDirectories
                 .Add(new DeviceDirectory(directoryName, WorkingDirectory)));
         }
@@ -100,8 +100,8 @@ namespace Day7_NoSpaceLeftOnDevice
         {
             if (WorkingDirectory.Parent == null)
                 throw new DirectoryNotFoundException(nameof(WorkingDirectory));
-                WorkingDirectory = WorkingDirectory.Parent;
-                return;
+            WorkingDirectory = WorkingDirectory.Parent;
+            return;
         }
     }
 }
