@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day5_SupplyStacks", "Day5_S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoCHelpers", "AoCHelpers\AoCHelpers.csproj", "{FCACA3A7-F1ED-4D93-BABF-E2AACC8FD689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day6_TuningTrouble", "Day6_TuningTrouble\Day6_TuningTrouble.csproj", "{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day6_TuningTrouble", "Day6_TuningTrouble\Day6_TuningTrouble.csproj", "{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day7_NoSpaceLeftOnDevice", "Day7_NoSpaceLeftOnDevice\Day7_NoSpaceLeftOnDevice.csproj", "{DA5096A7-B4D7-45EC-85D9-4BDD6E307897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{043EBDAA-32DF-46D8-A0C4-309DA5EE1602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA5096A7-B4D7-45EC-85D9-4BDD6E307897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA5096A7-B4D7-45EC-85D9-4BDD6E307897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA5096A7-B4D7-45EC-85D9-4BDD6E307897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA5096A7-B4D7-45EC-85D9-4BDD6E307897}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
