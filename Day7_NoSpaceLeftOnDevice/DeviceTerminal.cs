@@ -39,7 +39,8 @@ namespace Day7_NoSpaceLeftOnDevice
         void AddFilesToWorkingDirectory(IEnumerable<string> files)
         {
             files.Select(x => x.Split(' ').ToTuple<string, string>())
-                .ForEach(file =>
+                .Where(file => !WorkingDirectory.Files.Contains(file.Item2))
+                .ForEach(file => 
                 WorkingDirectory.Files
                 .Add(new DeviceDirectoryFile(WorkingDirectory, long.Parse(file.Item1), file.Item2)));
         }
@@ -47,6 +48,7 @@ namespace Day7_NoSpaceLeftOnDevice
         void AddDirectoriesToWorkingDirectory(IEnumerable<string> directories)
         {
             directories.Select(x => x.Split(' ', StringSplitOptions.RemoveEmptyEntries).Last())
+                .Where(directoryName => !WorkingDirectory.SubDirectories.Contains(directoryName))
                 .ForEach(directoryName =>
                 WorkingDirectory.SubDirectories
                 .Add(new DeviceDirectory(directoryName, WorkingDirectory)));
