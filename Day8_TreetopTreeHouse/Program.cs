@@ -11,6 +11,11 @@ var treeInfos = new TreeInfo[input.Length, input.Length].Fill(() => new TreeInfo
 
 SolvePuzzle();
 
+Console.WriteLine($"Part 1: There are {treeInfos.Count(x => x.IsVisible)} visible trees");
+Console.WriteLine($"Part 2: The most scenic tree has a score of {treeInfos.Max(x => x.ViewDistances.Aggregate(1, (acc,val) => acc *= val))}");
+Console.WriteLine("Press any key to exit...");
+Console.ReadKey();
+
 void SolvePuzzle()
 {
     var stepLists = new List<(int y, int x)>[4].Fill(() => new List<(int y, int x)>());
@@ -93,37 +98,6 @@ int CalculateTreeViewDistance(int[][] treeMap, int x, int y, List<(int y, int x)
 
     return (max - min) + 1;
 }
-
-int numVisibleTrees = 0;
-
-for (int y = 0; y < input.Length; y++)
-{
-    for (int x = 0; x < input[y].Length; x++)
-    {
-        if (treeInfos[x, y].IsVisible)
-            numVisibleTrees++;
-    }
-}
-
-int mostScenicTreeScore = 0;
-
-for (int y = 0; y < input.Length; y++)
-{
-    for (int x = 0; x < input.Length; x++)
-    {
-        mostScenicTreeScore = Math.Max(mostScenicTreeScore,
-            treeInfos[y, x].ViewDistances[0]
-            * treeInfos[y, x].ViewDistances[1]
-            * treeInfos[y, x].ViewDistances[2]
-            * treeInfos[y, x].ViewDistances[3]
-            );
-    }
-}
-
-Console.WriteLine($"Part 1: There are {numVisibleTrees} visible trees");
-Console.WriteLine($"Part 2: The most scenic tree has a score of {mostScenicTreeScore}");
-Console.WriteLine("Press any key to exit...");
-Console.ReadKey();
 
 enum Direction
 {
