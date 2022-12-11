@@ -1,153 +1,137 @@
 ﻿using AoCHelpers;
-//Clean this mess...
+using AoCHelpers.ArrayExtensions;
+using AoCHelpers.IEnumerableExtensions;
+
+//Well this got messier than i had hoped...
+//Doing it all in one file sure doesn't help either
+//But hey, we managed to do it without writing more than 2 for loops for the search!
 
 var input = InputHelper.ReadInputLinesFromFile("./input.txt").Select(x => x.Select(y => (int)char.GetNumericValue(y)).ToArray()).ToArray();
+var treeInfos = new TreeInfo[input.Length, input.Length].Fill(() => new TreeInfo());
 
-var treeVisibility = new byte[input.Length, input[0].Length];
-var treeVisibilityRange = new int[input.Length, input[0].Length, 4];
+SolvePuzzle();
 
-var eastStepList = new List<int>();
-var westStepList = new List<int>();
-
-//Find the highest tree, and calculate how many trees each tree can see from east to west.
-for (int y = 0; y < input.Length; y++)
+void SolvePuzzle()
 {
-    var row = input[y];
-    var rightMax = 0;
-    var leftMax = 0;
+    var stepLists = new List<(int y, int x)>[4].Fill(() => new List<(int y, int x)>());
 
-    int previousRight = 0;
-    int previousLeft = 0;
-    westStepList.Clear();
-    eastStepList.Clear();
-
-    for (int x = 0; x < row.Length; x++)
+    for (int y = 0; y < input!.Length; y++)
     {
-        if (row[x] > leftMax)
+        stepLists.ForEach(x => x.Clear());
+
+        var highestTree = new int[4];
+        var previousTreeHeight = new int[4];
+
+        for (int x = 0; x < input.Length; x++)
         {
-            treeVisibility[y, x] |= 0b1000;
-            treeVisibilityRange[y, x, 0] = x;
-            leftMax = row[x];
-        } else if (row[x] > previousLeft)
-        {
-            var t = westStepList.AsEnumerable().Reverse().TakeWhile(z => row[z] < row[x]).LastOrDefault();
-            treeVisibilityRange[y, x, 0] = (x - t) + 1;
-            westStepList.Add(x);
+            ComputeTreeInfo(input, x, x, y, highestTree, previousTreeHeight, stepLists, Direction.West);
+            ComputeTreeInfo(input, x, (input.Length - 1) - x, y, highestTree, previousTreeHeight, stepLists, Direction.East);
+
+            ComputeTreeInfo(input, x, y, x, highestTree, previousTreeHeight, stepLists, Direction.North);
+            ComputeTreeInfo(input, x, y, (input.Length - 1) - x, highestTree, previousTreeHeight, stepLists, Direction.South);
         }
-        else
-        {
-            treeVisibilityRange[y, x, 0] = 1;
-        }
-
-        if (row[x] != previousLeft || x == 0)
-            westStepList.Add(x);
-
-        previousLeft = row[x];
-
-        var rIndex = row.Length - (x + 1);
-        if (row[rIndex] > rightMax)
-        {
-            treeVisibilityRange[y, rIndex, 3] = x;
-            treeVisibility[y, rIndex] |= 0b0001;
-            rightMax = row[rIndex];
-        } else if (row[rIndex] > previousRight)
-        {
-            var t = eastStepList.AsEnumerable().Reverse().TakeWhile(z => row[z] < row[rIndex]).LastOrDefault();
-            treeVisibilityRange[y, rIndex, 3] = (t - rIndex) + 1;
-        }
-        else
-        {
-            treeVisibilityRange[y, rIndex, 3] = 1;
-        }
-
-        if (row[rIndex] != previousRight || x == 0)
-            eastStepList.Add(rIndex);
-
-        previousRight = row[rIndex];
     }
 }
 
-var northStepList = new List<int>();
-var southStepList = new List<int>();
-//Find the highest tree, and calculate how many trees each tree can see from north to south.
-for (int x = 0; x < input[0].Length; x++)
+void ComputeTreeInfo(in int[][] treeMap, int iteration, in int x, in int y, int[] highestTree, int[] previousTreeHeight, List<(int, int)>[] stepList, Direction direction)
 {
-    var tMax = 0;
-    var bMax = 0;
+    TreeInfo tree = treeInfos[y, x];
 
-    int previousUp = 0;
-    int previousDown = 0;
-
-    northStepList.Clear();
-    southStepList.Clear();
-
-    for (int y = 0; y < input.Length; y++)
-    {
-        if (input[y][x] > tMax)
-        {
-            treeVisibilityRange[y, x, 1] = y;
-            treeVisibility[y, x] |= 0b0100;
-            tMax = input[y][x];
-        } else if (input[y][x] > previousUp)
-        {
-            var t = northStepList.AsEnumerable().Reverse().TakeWhile(z => input[z][x] < input[y][x]).LastOrDefault();
-            treeVisibilityRange[y, x, 1] = (y - t) + 1;
-        } else
-        {
-            treeVisibilityRange[y, x, 1] = 1;
-        }
-
-        if (y == 0 || input[y][x] != previousUp)
-            northStepList.Add(y);
-
-        previousUp = input[y][x];
-
-        var bIndex = input.Length - (y + 1);
-
-        if (input[bIndex][x] > bMax)
-        {
-            treeVisibility[bIndex, x] |= 0b0010;
-            treeVisibilityRange[bIndex, x, 2] = y;
-            bMax = input[bIndex][x];
-        }
-        else if (input[bIndex][x] > previousDown)
-        {
-            var t = southStepList.AsEnumerable().Reverse().TakeWhile(z => input[z][x] < input[bIndex][x]).LastOrDefault();
-            treeVisibilityRange[bIndex, x, 2] = (t - bIndex) + 1;
-        } else
-        {
-            treeVisibilityRange[bIndex, x, 2] = 1;
-        }
-
-        if (y == 0 || input[bIndex][x] != previousDown)
-            southStepList.Add(bIndex);
-
-        previousDown = input[bIndex][x];
-    }
+    var (isVisible, viewDistance) = CheckTreeVisibilityAndViewDistance(treeMap, iteration, x, y, ref highestTree[(int)direction], ref previousTreeHeight[(int)direction], stepList[(int)direction]);
+    tree.IsVisible |= isVisible;
+    tree.ViewDistances[(int)direction] = viewDistance;
 }
 
-int count = 0;
-for(int y = 0; y < input.Length; y++)
+(bool IsVisible, int viewDistance) CheckTreeVisibilityAndViewDistance(in int[][] treeMap, int iteration, in int x, in int y, ref int maxHeight, ref int previousHeight, List<(int y, int x)> stepList)
 {
-    for (int x = 0; x < input[y].Length; x++)
+    var viewDistance = 0;
+    var isVisible = false;
+
+    var currentTreeHeight = treeMap[y][x];
+
+    if (currentTreeHeight > maxHeight)
     {
-        if (treeVisibility[y, x] != 0) { count++; }
+        isVisible = true;
+        viewDistance = iteration; //We can't simply set it to x since we also do reverse searches.
+        maxHeight = currentTreeHeight;
     }
+    else if (currentTreeHeight > previousHeight)
+    {
+        viewDistance = CalculateTreeViewDistance(treeMap, x, y, stepList);
+    }
+    else
+    {
+        viewDistance = 1;
+    }
+
+    if (currentTreeHeight != previousHeight || iteration == 0)
+        stepList.Add((y, x));
+
+    previousHeight = currentTreeHeight;
+
+    return (isVisible, viewDistance);
 }
 
-int scenicScore = 0;
+int CalculateTreeViewDistance(int[][] treeMap, int x, int y, List<(int y, int x)> stepList)
+{
+    var step = stepList.AsEnumerable().Reverse().TakeWhile(previousStep => treeMap[previousStep.y][previousStep.x] < treeMap[y][x]).LastOrDefault();
+    var min = 0;
+    var max = 0;
+
+    var otherTreeHeight = treeMap[step.y][step.x];
+
+    if (step.y == y)
+    {
+        min = Math.Min(step.x, x);
+        max = Math.Max(step.x, x);
+    }
+    else
+    {
+        min = Math.Min(step.y, y);
+        max = Math.Max(step.y, y);
+    }
+
+    return (max - min) + 1;
+}
+
+int numVisibleTrees = 0;
 
 for (int y = 0; y < input.Length; y++)
 {
     for (int x = 0; x < input[y].Length; x++)
     {
-        scenicScore = Math.Max(scenicScore,
-            treeVisibilityRange[y, x, 0]
-            * treeVisibilityRange[y, x, 1]
-            * treeVisibilityRange[y, x, 2]
-            * treeVisibilityRange[y, x, 3]
+        if (treeInfos[x, y].IsVisible)
+            numVisibleTrees++;
+    }
+}
+
+int mostScenicTreeScore = 0;
+
+for (int y = 0; y < input.Length; y++)
+{
+    for (int x = 0; x < input.Length; x++)
+    {
+        mostScenicTreeScore = Math.Max(mostScenicTreeScore,
+            treeInfos[y, x].ViewDistances[0]
+            * treeInfos[y, x].ViewDistances[1]
+            * treeInfos[y, x].ViewDistances[2]
+            * treeInfos[y, x].ViewDistances[3]
             );
     }
 }
 
-;
+Console.WriteLine($"Part 1: There are {numVisibleTrees} visible trees");
+Console.WriteLine($"Part 2: The most scenic tree has a score of {mostScenicTreeScore}");
+Console.WriteLine("Press any key to exit...");
+Console.ReadKey();
+
+enum Direction
+{
+    North, East, South, West
+}
+
+record class TreeInfo(int Height, bool IsVisible, int[] ViewDistances)
+{
+    public bool IsVisible { get; set; } = IsVisible;
+    public TreeInfo() : this(0, false, new int[4]) { }
+}
